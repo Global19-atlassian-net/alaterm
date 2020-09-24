@@ -18,6 +18,9 @@ if [ "$1" = "-kill" ] ; then # Kills any. Ignores second argument.
 	rm -r -f /tmp/.*X1*
 	rm -f ~/.vnc/*.log
 	rm -f ~/.vnc/*.pid
+	rm -f ~/.Xauthority && touch ~/.Xauthority
+	rm -f ~/.X11authority && touch ~/.X11authority
+	rm -f ~/.ICEauthority && touch ~/.ICEauthority
 	# Find running VNC server, if any:
 	currvnc=$(pidof Xvnc) 2>/dev/null
 	kill $currvnc >/dev/null 2>&1 # No quotes.
