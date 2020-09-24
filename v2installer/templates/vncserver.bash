@@ -12,7 +12,28 @@ if [ "$(whoami)" = "root" ] ; then
 	exit 1
 fi
 
-if [ "$1" = "-kill" ] ; then # Kills any. Ignores second argument.
+show_usage() {
+	echo "Alaterm vncserver is /usr/local/scripts/vncserver."
+	echo "Usage:"
+	echo "  vncserver :1     [Starts display :1. No other.]"
+	echo "  vncserver -kill  [Kills the server.]"
+	echo "  vncserver -list  [DISPLAY PID, or exit 1.]"
+	echo "Otherwise, shows this usage."
+	exit 0
+}
+
+if [[ "$1" =~ ^:0 ]] || [[ "$1" =~ ^:[2-9] ]] ; then
+	echo "Only display :1 allowed. Nothing done."
+	exit 1
+fi
+
+goodarg="no"
+[ "$1" = ":1" ] && goodarg="yes"
+[ "$1" = "-kill" ] && goodarg="yes"
+[ "$1" = "-list" ] && goodarg="yes"
+[ "$goodarg" = "no" ] && show_usage
+
+if [ "$1" = "-kill" ] ; then # Kills server. Ignores any following argument.
 	# Remove these files, whether or not existing vnc server:
 	rm -r -f /tmp/.X1*
 	rm -r -f /tmp/.*X1*
@@ -25,7 +46,7 @@ if [ "$1" = "-kill" ] ; then # Kills any. Ignores second argument.
 	currvnc=$(pidof Xvnc) 2>/dev/null
 	kill $currvnc >/dev/null 2>&1 # No quotes.
 	if [ "$?" -eq 0 ] ; then
-		echo "Alaterm vncserver killed. To restart it:  vncserver"
+		echo "Killed vncserver. To restart:  vncserver :1"
 		exit 0
 	else
 		echo "Alaterm vncserver was not running."
@@ -45,23 +66,7 @@ if [ "$1" = "-list" ] ; then
 	fi
 fi
 
-if [ "$#" -gt 1 ] ; then
-	echo "Alaterm vncserver only accepts these:"
-	echo "  vncserver        [starts display :1. No other.]"
-	echo "  vncserver :1     [same as above]"
-	echo "  vncserver -kill  [kills every display number]"
-	echo "  vncserver -list  [DISPLAY PID, or exit 1 if none.]"
-	echo "Nothing done."
-	exit 1
-fi
-
-if [ "$#" -eq 1 ] && [[ ! "$1" =~ ^:1 ]] ; then
-	echo "Alaterm only uses display :1."
-	echo "Nothing done."
-	exit 1
-fi
-
-# From here, either no arguments, or single argument was :1.
+# From here, single argument was :1.
 
 mygeom="1280x800" # Default.
 if [ -r "$HOME/.vnc/config" ] ; then
@@ -85,7 +90,7 @@ currvnc=$(pidof Xvnc) 2>/dev/null
 if [ "$?" -eq 0 ] ; then
 	echo "Alaterm vncserver already running at :1."
 	echo "Nothing done."
-	exit 1
+	exit 0
 else
 	# start-vnc.pl requires -fromvncserver. No quotes on $mygeom:
 	perl /usr/local/scripts/start-vnc.pl -fromvncserver $mygeom
