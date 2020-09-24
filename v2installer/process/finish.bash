@@ -49,8 +49,6 @@ install_template "bash.bash_logout.bash"
 # Install launchCommand, and copy to Termux:
 install_template "launchcommand.bash" "755"
 cp "$alatermTop/usr/local/scripts/$launchCommand" "$PREFIX/bin/"
-# Prevent Alaterm from launching a second instance of itself:
-install_template "fake-launch.bash" "755"
 # Let Termux know that Alaterm is installed:
 modify_termuxBashrc
 # Make backup copy of original status file:
