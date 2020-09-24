@@ -93,6 +93,7 @@ rm -f "/usr/local/scripts/start-vnc" # Was incorrectly listed as bash.
 rm -f "/usr/local/scripts/stop-vnc" # Obsolete.
 install_template "start-vnc.pl" "755" # Perl. Part of custom vncserver:
 install_template "vncserver.bash" "755" # In /usr/local/scripts.
+install_template "vncviewer.bash" "755" # In /usr/local/scripts.
 
 # Miscellaneous:
 install_template "profile.bash" # Change PATH.

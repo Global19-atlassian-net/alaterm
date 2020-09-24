@@ -31,6 +31,8 @@ fi
 rm -f "$alatermTop/getlxde-launch.bash"
 # Install a variety of files:
 install_template "home.xinitrc.bash"
+install_template "vncserver.bash" "755"
+install_template "vncviewer.bash" "755"
 install_template "start-vnc.pl" "755"
 [ -f "$alatermTop/usr/bin/trash-put" ] && install_template "readme-trash.md"
 install_template "profile.bash" # The real one.
