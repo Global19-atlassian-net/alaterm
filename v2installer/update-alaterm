@@ -1,0 +1,125 @@
+#!/bin/bash
+# This script updates installed Alaterm.
+# Usage:
+# Launch Alaterm.
+# Enter this folder, then command:  bash update-alaterm
+
+let v2latest=220
+
+# Location of this script file, even if called from somewhere else:
+export here="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+cd "$here" # Update component files are relative to $here.
+
+if [ ! -r "/status" ] && [[ "$PWD" =~ TAexp-min ]] ; then # Developer only.
+	export alatermTop="$PREFIX/../../alaterm-dev"
+	if [ ! -d "$alatermTop" ] ; then
+		echo "You did not install alaterm-dev yet!" ; exit 1
+	fi
+	export launchCommand="alaterm-dev"
+	export zzzz="$alatermTop"
+	export termuxPrefix="$PREFIX"
+	export termuxHome="$HOME"
+	export userLocale="te_ST"
+	let scriptRevision=200 # Dummy, lower than any update.
+	[ -r "$zzzz/status" ] && source "$zzzz/status"
+elif  [ -r "/status" ] ; then # Anyone else must be within Alaterm.
+	chmod 755 "$alatermTop"
+	chmod 644 "/status"
+	source /status
+else
+	echo -e "\e[1;91mPROBLEM.\e[0m Did not find readable /status file."
+	echo "This script must be launched from within Alaterm."
+	exit 1
+fi
+
+if [ "$scriptRevision" = "" ] || [ "$scriptRevision" -lt 40 ] ; then
+	echo "Your Alaterm installation is too old for updates."
+	echo "Nothing done."
+	exit 1
+fi
+
+gotupstuff="yes"
+[ ! -d "$here/help-alaterm" ] && gotupstuff="no"
+[ ! -d "$here/templates" ] && gotupstuff="no"
+[ ! -d "$here/process" ] && gotupstuff="no"
+if [ "$gotupstuff" = "no" ] ; then
+	echo -e "$PROBLEM You do not have all the necessary files."
+	echo "Get all of the Alaterm repository ZIP,"
+	echo "Unzip it in launched Alaterm, and try again."
+	exit 1
+fi
+
+if [ "$scriptRevision" -ge "$v2latest" ] ; then
+	echo "Your installation is up-to-date."
+	echo "Its scriptRevision is $scriptRevision"
+	echo "Nothing done."
+	exit 0
+fi
+
+# Make backup copy of original status file, if not already done:
+if [ -f "$zzzz/status" ] && [ ! -f "$zzzz/status.orig" ] ; then
+	cp "$zzzz/status" "$zzzz/status.orig"
+fi
+
+# install_template creates an Alaterm file, from a file in templates folder;
+if [ -r "$here/process/instemp.bash" ] ; then
+	source "$here/process/instemp.bash"
+else
+	echo -e "$PROBLEM. Missing file process/instemp.bash."
+	echo "Get fresh zip from Alaterm repository."
+	exit 1
+fi
+
+## Now for the update:
+## ---------------------------------------------------------------------------
+
+printf "Updating Alaterm... "
+
+# Fix missing -p here:
+thisfile="$zzzz/usr/local/scripts/compile-libmpeg2"
+sed -i 's!mkdir ~/\.source!mkdir -p ~/\.source!' "$thisfile"
+
+# Re-install help files, to ensure latest:
+rm -r -f "$zzzz/usr/local/help-alaterm"
+mkdir -p "$zzzz/usr/local/help-alaterm"
+cp -r "$here/help-alaterm" "$zzzz/usr/local/"
+
+# Original detected command directory. Should detect if in active Alaterm:
+install_template "launchcommand.bash" "755"
+cp "$zzzz/usr/local/scripts/$launchCommand" "$termuxPrefix/bin"
+
+# Un-fix a bad update to vncserver:
+rm -f "/usr/local/scripts/start-vnc" # Was incorrectly listed as bash.
+rm -f "/usr/local/scripts/stop-vnc" # Obsolete.
+install_template "start-vnc.pl" "755" # Perl. Part of custom vncserver:
+install_template "vncserver.bash" "755" # In /usr/local/scripts.
+
+# Miscellaneous:
+install_template "profile.bash" # Change PATH.
+install_template "home.bash_profile.bash" # General stuff.
+install_template "home.xinitrc.bash" "755" # Might have been missing.
+install_template "bash.bashrc.bash" # No longer in use.
+install_template "top.bash"
+install_template "ps.bash"
+
+# Method for fixing dbus-launch changed:
+rm -f "$zzzz/etc/pacman.d/hooks/fixdbuslaunch.hook"
+rm -f "$zzzz/usr/local/scripts/fixdbuslaunch"
+install_template "dbus-programs.hook"
+install_template "dbus-programs.bash" "755"
+# Subsequent updates, use sed on $zzzz/usr/local/scripts/dbus-programs.
+
+# Remove unnecessary aliases from ~/.bashrc:
+b="$zzzz/home/.bashrc"
+sed -i '/alias ls/d' "$b"
+sed -i '/alias pacman/d' "$b"
+sed -i '/alias fc-cache/d' "$b"
+sed -i '/alias vncviewer/d' "$b"
+sed -i '/installed vncviewer/d' "$b"
+
+
+##
+sleep 1 # So that it looks like something happened.
+printf "DONE.\n"
+exit 0
+##

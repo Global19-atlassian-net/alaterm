@@ -4,6 +4,7 @@
 
 /* Default Monospace font, and some others, have ligatures. */
 /* NetSurf applies them, even to inappropriate code. Roboto font is OK. */
+/* This css is for helpversion=6 */
 
 body {font-family: Roboto; font-size: 125%;
 background-color: #aaaaaa; padding-top:1em;}
@@ -16,7 +17,6 @@ h5 {clear:both; margin-top:1.5em; margin-bottom:1em;}
 
 p {margin:0em; text-indent:1em;}
 
-p.indent {text-indent:1em;}
 p.noindent {text-indent:0em;}
 
 p.break {margin-top:1em; text-indent:0em;}

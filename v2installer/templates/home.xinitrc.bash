@@ -1,5 +1,6 @@
 #!/bin/bash
 # Alaterm:file=$alatermTop/home/.xinitrc
+# File /home/.xinitrc, created by Alaterm installer.
 # Over-rides the default /etc/X11/xinit/xinitrc.
 # Otherwise, the default may autolaunch the wrong desktop suite.
 userresources=$HOME/.Xresources

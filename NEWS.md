@@ -13,3 +13,5 @@ Your friendly Alaterm developer does not know much about programming,
 but he is very good with a sledge hammer.
 
 If necessary, it will be re-whacked. Wielding a sledge hammer is fun.
+
+Latest re-whack: September 23, 2020. Wheeee...

@@ -30,6 +30,7 @@ else
 fi
 rm -f "$alatermTop/getlxde-launch.bash"
 # Install a variety of files:
+install_template "home.xinitrc.bash"
 install_template "start-vnc.pl" "755"
 [ -f "$alatermTop/usr/bin/trash-put" ] && install_template "readme-trash.md"
 install_template "profile.bash" # The real one.
@@ -45,8 +46,6 @@ install_template "bookmarks.conf"
 # Not all file managers respect comments in bookmarks:
 sed -i '/file=/d' "$alatermTop/home/.config/gtk-3.0/bookmarks"
 install_template "default-resolution.bash" "755"
-install_template "home.vnc-config.conf"
-install_template "home.vnc-xstartup.bash" "755"
 install_template "lxde-rc.xml"
 install_template "nanorc.conf"
 echo -e "$INFO Installed and configured LXDE Desktop."

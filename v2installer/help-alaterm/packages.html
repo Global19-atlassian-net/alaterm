@@ -8,7 +8,7 @@
 <!-- Within Alaterm, use NetSurf browser. -->
 <!-- To read help outside of Alaterm, download the repository ZIP. -->
 <!-- Unzip it, then view the html in any browser. -->
-<!-- helpversion=5 -->
+<!-- helpversion=6 -->
 
 <title>Adding, Removing, and Updating Software Packages</title>
 
@@ -33,18 +33,23 @@
 You can discard the files from the Alaterm repository at GitHub.</p>
 
 <p>If there is an update to Alaterm, it will only involve some
-change to one or more configuration files. It will not re-install.
-Launch Alaterm, then type:</p>
-<p class="code"><code>echo $scriptVersion</code></p>
+change to one or more configuration files. It will not re-install.</p>
 
-<p>The Alaterm repository will have a folder named <code>update</code>.
-Compare your script version to the LATEST version.
-There will be two LATEST versions. One pertains to version 1.x,
-and its number will be 0-199. The other pertains to version 2.x,
-and its number will be 200-299. If your scriptVersion is less than
-the LATEST, then <code>bash update.bash</code> applies the update.
-Note that version 1.x cannot be updated to version 2.x.
-They are different.</p>
+<p>Launch Alaterm, then type:</p>
+<p class="code"><code>echo $scriptRevision</code></p>
+<p>If that returns a 2-digit number, you installed with Version 1.
+If it returns a 3-digit number, you installed with Version 2.</p>
+
+<p>At the <a href="https://github.com/cargocultprog/alaterm">
+Alaterm repository</a> you will see a file <code>LATEST-vv-VVV</code>.
+The 2-digit <code>vv</code> is the latest for Version 1.
+The 3-digit <code>VVV</code> is the latest for Version 2.</p>
+
+<p>If the latest version is greater than your scriptRevision,
+then obtain the <code>update</code> folder, and within Alaterm
+run: <code>bash alaterm-update</code>.
+
+<p>If you apply the same update more than once, no harm done.</p>
 
 <p class="top">^<a href="#h">TOP</a>^</p>
 
@@ -52,7 +57,7 @@ They are different.</p>
 <h4 id="h3.2">3.2. Using pacman for Arch software</h4>
 
 <p class="break">Programs, such as GIMP or LibreOffice, come from
-the Arch Linux ARM project. This is a subset of Arch Linux.
+the Arch Linux ARM project. That is a subset of Arch Linux.
 Within that subset, some programs will work in your system,
 but others will not.</p>
 

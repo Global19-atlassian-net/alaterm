@@ -4,43 +4,36 @@
 # Also copied to Termux $PREFIX/bin/.
 
 # This is the Alaterm launch command.
-# It cannot be run from within Alaterm.
-# If you ever delete it from Termux $PREFIX/bin/, then copy it to there.
+# It cannot be run by an already-launched Alaterm.
 
-echo "$PWD" | grep files >/dev/null 2>&1 # Part of Android path to Termux.
-if [ "$?" -ne 0 ] ; then
-	echo "This command cannot be launched within Alaterm."
+if [ -d /usr ] ; then # Alaterm has /usr, Termux has $PREFIX/usr.
+	echo "This command cannot be run by already-launched Alaterm."
 	echo "You may only launch it from Termux, outside of Alaterm."
 	exit 1
 fi
 
-source PARSE$alatermTop/status
+# Load the variables defined in Alterm status file:
+source PARSE$alatermTop/status # Big bad error if missing.
 
+# Check for necessary Termux support:
 hash proot >/dev/null 2>&1
 if [ "$?" -ne 0 ] ; then
 	echo -e "$PROBLEM Termux does not have proot installed."
 	echo "Cannot launch Alaterm now."
-	echo "Use Termux pkg to install proot, then try again."
+	echo "Termux command:  pkg install proot"
 	exit 1
 fi
+
 # It is possible to install vncservers both in Termux and in Alaterm.
 # They conflict if both are in use at the same time.
-# This checks for active Termux vncserver:
-hash vncserver >/dev/null 2>&1 # Refers to Termux vncserver.
+# Check for active Termux vncserver, kill it, and removes its temp files:
+mytvnc=$(pidof Xvnc) # If Xvnc is running, pidof returns its process ID.
 if [ "$?" -eq 0 ] ; then
-	vncserver -list | grep :[1234567890] >/dev/null 2>&1
-	if [ "$?" -eq 0 ] ; then # Termux vncserver is on.
-		echo -e "$PROBLEM Termux vncserver is active."
-		echo "Alaterm cannot launch due to conflict."
-		echo "When this script exits to Termux, command:"
-		echo -e "\e[1;33mvncserver -list\e[0m"
-		printf "Display number is \e[1;33m:1\e[0m or "
-		printf "\e[1;33m:2\e[0m or whatever.\n"
-		echo "Then command, using actual display number:"
-		echo -e "\e[1;33mvncserver -kill :1\e[0m"
-		echo "If server killed, then you can run Alaterm."
-		exit 1
-	fi
+	kill $mytvnc # No quotes.
+	rm -r -f /tmp/.X1*
+	rm -f /tmp/.X1*
+	rm -f ~/.vnc/*.log
+	rm -f ~/.vnc/*.pid
 fi
 
 # The proot string defines Alaterm paths within its confinement.
@@ -56,7 +49,7 @@ prsUser+=" -b /proc -b /system -b /dev -b /data "
 [ -d /vendor ] && prsUser+=" -b /vendor"
 [ -d /odm ] && prsuser+=" -b /odm"
 [ -d /product ] && prsuser+=" -b /product"
-# Many parts of Android /proc ae inacessible and cannot be mounted in Alaterm.
+# Many parts of Android /proc are inacessible in Alaterm.
 # Bind fake information instead, which fools many programs:
 if [ ! -r /proc/stat ] ; then
 	prsUser+=" -b $alatermTop/var/binds/dummyPS:/proc/stat"

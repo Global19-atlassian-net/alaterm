@@ -2,8 +2,8 @@
 # Alaterm: Arch Linux ARM in Termux.
 # Copyright and MIT License at bottom of this file.
 declare repository=https://github.com/cargocultprog/alaterm
-declare versionID=2.0.10 # Updated September 13, 2020.
-let thisRevision=210 # 210 in version 2.0.10.
+declare versionID=2.2.0 # Updated September 23, 2020.
+let thisRevision=220 # 220 in version 2.2.0.
 ##
 
 ## DEVICE REQUIREMENTS:
@@ -24,6 +24,8 @@ let thisRevision=210 # 210 in version 2.0.10.
 # * Interactive script. May require user response from time to time.
 #     If lucky, you can let it run by itself, after the first few minutes.
 # * Total installation time may take 40-60 minutes, depending on Internet.
+# * This script does not update an existing installation.
+#     For updates, use: bash update-alaterm
 ##
 
 ## LONG DESCRIPTION:
@@ -61,12 +63,13 @@ show_usage() { # Unless exactly one valid argument provided.
 	echo "For selected Android devices with ARM processors."
 	echo "Usage: bash $(basename $0) <install|remove|help|version>"
 	echo "Exactly one argument required. May abbreviate as: i r h v"
-	echo -e "Any choice, except version, gets interactive dialog.\n"
+	echo "Any choice, except version, gets interactive dialog."
+	echo -e "To update existing Alaterm, use: bash update-alaterm\n"
 	exit 0
 } # End show_usage.
 #
 show_scriptHelp() {
-	echo "This installs, updates, or removes Alaterm:"
+	echo "This installs or removes Alaterm:"
 	echo "Arch Linux ARM in Termux."
 	echo "Your device must run 32-bit or 64-bit Android 8 or later."
 	echo "The CPU must be ARM architecture, not Intel or AMD."
@@ -118,6 +121,8 @@ missing_something() {
 ## ---------------------------------------------------------------------------
 ## Functions and variables used by all following scripts.
 source "$here/process/globals.bash"
+[ "$?" -ne 0 ] && missing_something
+source "$here/process/instemp.bash"
 [ "$?" -ne 0 ] && missing_something
 ##
 
@@ -187,7 +192,7 @@ fi
 
 ## PRELIMINARY CONFIGURATION:
 ## ---------------------------------------------------------------------------
-## Creates dotfiles, launches Arch, updates, deletes, adds, creates user, etc.
+## Creates dotfiles, launches Arch, deletes, adds, creates user, etc.
 if [ "$completedPrelim" != "yes" ] ; then
 	source "$here/process/prelimconfig.bash"
 	[ "$?" -ne 0 ] && missing_something

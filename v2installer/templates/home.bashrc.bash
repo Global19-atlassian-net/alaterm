@@ -8,13 +8,8 @@
 # This file is sourced at user login, immediately after ~/.bash_profile.
 # It is also sourced if you use su to root, then exit to return to user.
 
-# Command prompt:
+# Command prompt, which you may customize:
 export PS1='\e[1;38;5;75m[alaterm:user@\W]$ \e[0m'
-alias ls='/usr/bin/ls --color=auto' # pretty-prints directory lists.
-alias pacman='sudo pacman'
-alias fc-cache='sudo fc-cache'
-# The installed vncviewer executable is ineffective:
-alias vncviewer='echo -e "\e[33mUse the separate VNC Viewer app.\e[0m"'
 ## If you have any custom ~/.bashrc code, put it below:
 
 

@@ -8,7 +8,7 @@
 <!-- Within Alaterm, use NetSurf browser. -->
 <!-- To read help outside of Alaterm, download the repository ZIP. -->
 <!-- Unzip it, then view the html in any browser. -->
-<!-- helpversion=5 -->
+<!-- helpversion=6 -->
 
 <title>Images</title>
 
@@ -43,18 +43,27 @@ rotation.</p>
 <h4 id="h4.2">4.2. Image editors</h4>
 
 <p class="break">Image editors can consume a lot of resources.
-Whenever you create or edit a large image, close unneccessary Android apps,
+Whenever you create or edit a large image,
+be sure to close unneccessary Android apps,
 and only work on one image at a time.
 If the editor allows layers, keep the number of layers small.</p>
 
 <p>If the file is on removable media (detachable SD card, USB pendrive),
 first copy the file to your device internal storage, and edit it there.
 If you attempt to manipulate a file directly on removable media,
-the application may crash. This has to do with Android file security.</p>
+the application may crash. This has to do with Android file security.
+In many cases, only the Android file manager (not an application,
+not PCManFM) can write to removable media.</p>
 
 <p class="li"><a href="https://www.gimp.org/">GIMP</a>
-is up-to-date, with full capabilities. Others will envy you.</p>
+is up-to-date, with full capabilities. Others will envy you.
+The original Alaterm developer created the installer for
+the specific purpose of using GIMP.</p>
 <p class="code"><code>pacman -S gimp</code></p>
+<p>When you first launch GIMP, open its Edit, Preferences menu.
+Go to System Resources. You probably should lower the values
+for undo memory, tile cache size, and new image size
+to about half of their installed defaults.</p>
 
 <p class="li"><a href="https://mypaint.org/">MyPaint</a>
 does many things, and is simpler than GIMP.</p>

@@ -8,7 +8,7 @@
 <!-- Within Alaterm, use NetSurf browser. -->
 <!-- To read help outside of Alaterm, download the repository ZIP. -->
 <!-- Unzip it, then view the html in any browser. -->
-<!-- helpversion=5 -->
+<!-- helpversion=6 -->
 
 <title>TeXLive</title>
 
@@ -36,11 +36,10 @@ Since TeX is rarely used by anyone other than doctoral candidates in
 Mathematical Physics, this help only provides a general guide.
 Proof left to student.</p>
 
-<p>If you already have a good, working installation of TeXLive in Termux,
-keep it. You may be able to use Termux command-line TeX programs
-while you are in Alaterm, but this is not guaranteed. You can try it.
-If it works, good for you. If it fails, do not report it as a bug.
-You can still install TeXLive in Alaterm.</p>
+<p>If your <i>only</i> interest in Alaterm is to use TeX,
+then you do not need Alaterm.
+You can install command-line TeXLive directly in Termux,
+and view the PDF using a suitable Android app.</p>
 
 <p class="top">^<a href="#h">TOP</a>^</p>
 
@@ -52,7 +51,7 @@ There are several package names, with more or less content. Best choice:</p>
 <p class="code"><code>pacman -S texlive-most</code></p>
 <p>Then choose the number(s) that you need. If you wish to add more later,
 simply re-run the above command, and choose again.</p>
-<p class="listhead">If pacman <code>tlmgr</code> does not allow you to
+<p>If pacman <code>tlmgr</code> does not allow you to
 install or update native TeX packages,
 then have a look at <a href="https://wiki.archlinux.org/index.php/TeX_Live">
 this web page</a> for solutions.
@@ -132,7 +131,7 @@ several dictionaries, then choose from within TeXworks.</p>
 
 <h4 id="h7.5">7.5. Viewing the PDF</h4>
 
-<p class="noindent">3.6.5 TeXworks can view PDF internally.
+<p class="noindent">TeXworks can view PDF internally.
 Or, PDF files can be viewed by the built-in <b>Evince</b> program,
 called "Document Viewer" in the LXDE Menu.</p>
 
