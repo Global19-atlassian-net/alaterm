@@ -122,8 +122,6 @@ missing_something() {
 ## Functions and variables used by all following scripts.
 source "$here/process/globals.bash"
 [ "$?" -ne 0 ] && missing_something
-source "$here/process/instemp.bash"
-[ "$?" -ne 0 ] && missing_something
 ##
 
 ## REMOVE:
@@ -145,12 +143,21 @@ if [ "$actionMode" != "install" ] ; then
 	exit 1
 fi
 
+[ ! -f "$here/process/compatibility.bash" ] && missing_something
+[ ! -f "$here/process/archive.bash" ] && missing_something
+[ ! -f "$here/process/unpack.bash" ] && missing_something
+[ ! -f "$here/process/locale.bash" ] && missing_something
+[ ! -f "$here/process/binds.bash" ] && missing_something
+[ ! -f "$here/process/prelimconfig.bash" ] && missing_something
+[ ! -f "$here/process/getlxde.bash" ] && missing_something
+[ ! -f "$here/process/finish.bash" ] && missing_something
+
+
 ## DEVICE COMPATIBILITY CHECKS:
 ## ---------------------------------------------------------------------------
 ## Measures ABI, free space, etc.
 if [ "$checkedCompatibility" != "yes" ] ; then
 	source "$here/process/compatibility.bash"
-	[ "$?" -ne 0 ] && missing_something
 fi
 ##
 
@@ -159,7 +166,6 @@ fi
 ## Gets Arch Linux ARM and its md5.
 if [ "$gotArchive" != "yes" ] ; then
 	source "$here/process/archive.bash"
-	[ "$?" -ne 0 ] && missing_something
 fi
 ##
 
@@ -168,7 +174,6 @@ fi
 ## Fools Arch into thinking that it is the operating system.
 if [ "$unpackedArchive" != "yes" ] ; then
 	source "$here/process/unpack.bash"
-	[ "$?" -ne 0 ] && missing_something
 fi
 ##
 
@@ -177,7 +182,6 @@ fi
 ## Reads locale from device properties. Will always be UTF-8.
 if [ "$localeSet" != "yes" ] ; then
 	source "$here/process/locale.bash"
-	[ "$?" -ne 0 ] && missing_something
 fi
 ##
 
@@ -186,7 +190,6 @@ fi
 ## Provides fake info for /proc/stat and /proc/version, if needed.
 if [ "$createdBinds" != "yes" ] ; then
 	source "$here/process/binds.bash"
-	[ "$?" -ne 0 ] && missing_something
 fi
 ##
 
@@ -195,7 +198,6 @@ fi
 ## Creates dotfiles, launches Arch, deletes, adds, creates user, etc.
 if [ "$completedPrelim" != "yes" ] ; then
 	source "$here/process/prelimconfig.bash"
-	[ "$?" -ne 0 ] && missing_something
 fi
 ##
 
@@ -204,7 +206,6 @@ fi
 ## Re-launches Arch as new user, installs the LXDE Desktop.
 if [ "$configuredDesktop" != "yes" ] ; then
 	source "$here/process/getlxde.bash"
-	[ "$?" -ne 0 ] && missing_something
 fi
 ##
 
@@ -213,7 +214,6 @@ fi
 ## Creates and installs the command for launching Alaterm from Termux.
 if [ "$completedInstall" != "yes" ] ; then
 	source "$here/process/finish.bash"
-	[ "$?" -ne 0 ] && missing_something
 fi
 ##
 
@@ -221,7 +221,7 @@ fi
 ## ---------------------------------------------------------------------------
 ## Congratulations!
 echo -e "$DONE"
-#
+[ ! -z "$devmode" ] && exit 0
 echo "Delete [d] Arch archive and its md5,"
 echo "or keep [k] them in Termux home?"
 while true ; do

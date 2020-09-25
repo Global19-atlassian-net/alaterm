@@ -1,5 +1,4 @@
 Alaterm:file=$alatermTop/home/.local/share/Trash/TRASH-INFO
-
 #### TRASH-INFO
 
 TRASH is also known as RUBBISH.

@@ -1,7 +1,7 @@
 # Part of Alaterm, version 2.
 # Routine for setting locale.
 
-echo "$(caller)" | grep -F alaterm-installer >/dev/null 2>&1
+echo "$(caller)" | grep -e alaterm-installer >/dev/null 2>&1
 if [ "$?" -ne 0 ] ; then
 	echo "This file is not stand-alone."
 	echo "It must be sourced from alaterm-installer."
@@ -54,12 +54,16 @@ find_locale() {
 
 
 # Perform above functions:
-find_locale
+if [ -z "$devmode" ] ; then
+	find_locale
+else
+	userLocale="te_ST"
+fi
 install_template "locale.conf"
 sleep .2
 LANG="$userLocale.UTF-8" # Always UTF-8.
 echo "export userLocale=$userLocale" >> "$alatermTop/status"
 echo "export LANG=$userLocale.UTF-8" >> "$alatermTop/status"
-echo "localeSet=yes" >> "$alatermTop/status"
-echo -e "$INFO Will use locale $userLocale and LANG $LANG."
+localeSet="yes" && echo "localeSet=yes" >> "$alatermTop/status"
+[ -z "$devmode" ] && echo -e "$INFO Locale $userLocale and LANG $LANG."
 ##

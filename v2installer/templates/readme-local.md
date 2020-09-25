@@ -1,5 +1,4 @@
 Alaterm:file=$alatermTop/usr/local/README
-
 ##### /usr/local/README
 
 Directory /usr/local is empty when unpacked from the Arch archive.

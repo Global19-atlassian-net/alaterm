@@ -1,10 +1,14 @@
 # Part of Alaterm, version 2.
 # Routine for setting global variables and functions.
 
-echo "$(caller)" | grep -F alaterm-installer >/dev/null 2>&1
-if [ "$?" -ne 0 ] ; then
+callerok="no"
+echo "$(caller)" | grep -e alaterm-installer >/dev/null 2>&1
+[ "$?" -ne 0 ] && callerok="yes"
+echo "$(caller)" | grep -e update-alaterm >/dev/null 2>&1
+[ "$?" -ne 0 ] && callerok="yes"
+if [ "$callerok" = "no" ] ; then
         echo "This file is not stand-alone."
-        echo "It must be sourced from alaterm-installer."
+        echo "It must be sourced from alaterm-installer or update-alaterm."
         echo exit 1
 fi
 
@@ -29,6 +33,13 @@ declare termuxHome="$HOME" # Where Termux is, at start.
 # Standard location is $termuxTop/alaterm, on-board device, within Termux app.
 declare alatermTop="$termuxTop/alaterm" # Highest rwx directory in Termux.
 declare launchCommand="alaterm" # As used by Termux.
+declare devmode="" # Empty for ordinary users.
+if [[ "$here" =~ TAexp-min ]] ; then # Developer use only.
+	devmode="yes"
+	alatermTop="$alatermTop-dev"
+	launchCommand="$launchCommand-dev"
+	echo "In devmode... "
+fi
 # ABI is Android-speak for its operating system. Not same as version number.
 # As of mid-2020 these two are known, plus Chromebook version of armeabi-v7a:
 declare abi32="armeabi-v7a" # 32-bit. May or may not be Chromebook.
@@ -157,4 +168,86 @@ start_termuxWakeLock() { # Prevents Android deep sleep.
 		wakelockOn="yes"
 	fi
 } # End start_termuxWakeLock.
+
+# Alaterm uses pacman package manager. Termux uses pkg, based on Debian tools.
+# If the Alaterm user attempts to use pkg, dpkg, apt, or related programs,
+# then a friendly message will be issued:
+create_fakeExecutables() {
+	cd "$alatermTop/usr/local/scripts"
+	cp pkg dpkg && cp pkg aptitude && cp pkg apt
+	for f in deb convert divert query split trigger ; do
+		cp dpkg "dpkg-$f"
+	done
+	for f in cache config get key mark ; do
+		cp apt "apt-$f"
+	done
+} # End create_fakeExecutables.
+
+# install_template creates an Alaterm file, from a file in templates folder.
+install_template() { # Takes 1 or 2 arguments: filename in /templates, chmod.
+	t="$here/templates/$1"
+	if [ ! -f "$t" ] ; then
+		echo -e "$PROBLEM install_template cannot locate file:"
+		echo "  templates/$1"
+		exit 1
+	fi
+	if [ "$#" -gt 2 ] ; then
+		echo -e "$PROBLEM More than 2 arguments for:"
+		echo "  install_template $1"
+		exit 1
+	fi
+	if [ "$#" = "2" ] ; then # Optional chmod.
+		ok="no"
+		[[ "$2" =~ ^[1-7][0-7][0-7]$ ]] && ok="yes" # 3 digits.
+		[[ "$2" =~ ^[0=7][1-7][0-7][0-7]$ ]] && ok="yes" # 4 digits.
+		if [ "$ok" != "yes" ] ; then
+			echo -e "$PROBLEM Bad chmod code $2 for:"
+			echo "  install_template $1."
+			exit 1
+		fi
+	fi
+	fs="" # Initialize.
+	fs="$(grep "laterm:file=" $t 2>/dev/null)" # Find the instruction.
+	# Extract destination filename from filestring:
+	fs="$(echo $fs | sed 's/.*laterm:file=//')"
+	fs="$(echo $fs | sed 's/ .*//')" # Destination ends at space.
+	if [ "$fs" = "" ] ; then
+		echo -e "$PROBLEM Cannot find instruction, Alaterm:file="
+		echo "  in templates/$1."
+		exit 1
+	fi
+	# Expand filestring variables, if present.
+	# These are paths containing / so alternative ! must be used in sed:
+	fs=$(echo "$fs" | sed "s!\$alatermTop!$alatermTop!")
+	fs=$(echo "$fs" | sed "s!\$PREFIX!$PREFIX!")
+	fs=$(echo "$fs" | sed "s!\$HOME!$HOME!")
+	fs=$(echo "$fs" | sed "s!\$launchCommand!$launchCommand!")
+	# If necessary, create the directory path:
+	dir="$(echo $fs | sed 's![^/]*$!!')" # Path only.
+	mkdir -p "$dir" 2>/dev/null
+	if [ "$?" -ne 0 ] ; then
+		echo -e "$PROBLEM Cannot create directory:"
+		echo "  $dir"
+		echo "  required by install_template $1."
+		exit 1
+	fi
+	sleep .05
+	cp "$t" "$fs"
+	sleep .05
+	sed -i '/laterm:file=/d' "$fs" # Remove instruction line.
+	# After removing instruction, most templates are installed verbatim.
+	# Use PARSE for variables that must be expanded there.
+	sed -i "s!PARSE\$launchCommand!$launchCommand!" "$fs"
+	sed -i "s!PARSE\$alatermTop!$alatermTop!" "$fs"
+	sed -i "s!PARSE\$userLocale!$userLocale!" "$fs"
+	sed -i "s!PARSE\$PREFIX!$PREFIX!" "$fs" # Termux.
+	sed -i "s!PARSE\$HOME!$HOME!" "$fs" # Termux.
+	# chmod if specified:
+	if [ "$#" = "2" ] ; then
+		chmod "$2" "$fs"
+	else
+		chmod 644 "$fs"
+	fi
+	sleep .05
+} # End install_template.
 ##

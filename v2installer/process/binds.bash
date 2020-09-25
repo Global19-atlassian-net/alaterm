@@ -1,7 +1,7 @@
 # Part of Alaterm, version 2.
 # Routine for creating dummy /proc files, if needed.
 
-echo "$(caller)" | grep -F alaterm-installer >/dev/null 2>&1
+echo "$(caller)" | grep -e alaterm-installer >/dev/null 2>&1
 if [ "$?" -ne 0 ] ; then
 	echo "This file is not stand-alone."
 	echo "It must be sourced from alaterm-installer."
@@ -31,6 +31,7 @@ count_processors() { # This picks the appropriate size, counting from 0:
 		processors=-1
 	fi
 	rm -f lpa lpb lpc lpd
+	let processors="$processors"
 	echo "let processors=$processors" >> "$alatermTop/status"
 } # End count_processors.
 #
@@ -75,12 +76,12 @@ create_dummyPV() {
 } # End create_dummyPV.
 
 
-# Perform the above functions:
+# Perform the above functions, whether or not devmode:
 mkdir -p "$alatermTop/var/binds"
 count_processors
 [ ! -r /proc/stat ] && create_dummyPS "$processors"
 [ ! -r /proc/version ] && create_dummyPV
 sleep .2
-echo -e "$INFO Created dummy binds."
-echo "createdBinds=yes" >> "$alatermTop/status"
+[ -z "$devmode" ] && echo -e "$INFO Created dummy binds."
+createdBinds="yes" && echo "createdBinds=yes" >> "$alatermTop/status"
 ##

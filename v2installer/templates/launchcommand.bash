@@ -12,8 +12,24 @@ if [ -d /usr ] ; then # Alaterm has /usr, Termux has $PREFIX/usr.
 	exit 1
 fi
 
-# Load the variables defined in Alterm status file:
-source PARSE$alatermTop/status # Big bad error if missing.
+export alatermTop="PARSE$alatermTop"
+
+# Load the variables defined in Alaterm status file:
+if [ -r "$alatermTop/status" ] ; then
+	source "$alatermTop/status"
+else
+	if [ -r "$alatermTop/status.orig" ] ; then
+		cp "$alatermTop/status.orig" "$alatermTop/status"
+		chmod 644 "$alatermTop/status"
+		source "$alatermTop/status"
+		echo -e "$WARNING Did not find Alaterm status file."
+		echo "Found status.orig. Copied it. Using it."
+	else
+		echo -e "\e[1;91mPROBLEM.\e[0m Missing Alaterm status file."
+		echo "Cannot launch Alaterm without it."
+		exit 1
+	fi
+fi
 
 # Check for necessary Termux support:
 hash proot >/dev/null 2>&1

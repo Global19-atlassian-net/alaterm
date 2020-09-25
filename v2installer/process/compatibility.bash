@@ -1,7 +1,7 @@
 # Part of Alaterm, version 2.
 # Routines for initial compatibility checks.
 
-echo "$(caller)" | grep -F alaterm-installer >/dev/null 2>&1
+echo "$(caller)" | grep -e alaterm-installer >/dev/null 2>&1
 if [ "$?" -ne 0 ] ; then
 	echo "This file is not stand-alone."
 	echo "It must be sourced from alaterm-installer."
@@ -244,17 +244,23 @@ verify_storageEnabled() { # So Alaterm communicates with Android file manager.
 
 
 # Sequence of actions:
-check_directory # Intended location OK?
-check_priorInstall # Anything already there?
-check_ABI # Your flavor of Android system. Not same as version number.
-check_kernel # Release must be at least 4. Probably is.
-check_freeSpace # Internal Storage only.
-caution_rooters # Alaterm is primarily for non-rooted devices.
-ignore_proxy # If proxy server in Termux, not copied into Alaterm.
-update_termuxPackages
-get_moreTermux
-verify_storageEnabled # For file transfer into or out of Alaterm.
-create_statusFile # Records progress of this installer.
-echo -e "$INFO Passed preliminary inspection."
+if [ -z "$devmode" ] ; then
+	check_directory # Intended location OK?
+	check_priorInstall # Anything already there?
+	check_ABI # Your flavor of Android system. Not same as version number.
+	check_kernel # Release must be at least 4. Probably is.
+	check_freeSpace # Internal Storage only.
+	caution_rooters # Alaterm is primarily for non-rooted devices.
+	ignore_proxy # If proxy server in Termux, not copied into Alaterm.
+	update_termuxPackages
+	get_moreTermux
+	verify_storageEnabled # For file transfer into or out of Alaterm.
+	create_statusFile # Records progress of this installer.
+	echo -e "$INFO Passed preliminary inspection."
+else
+	mkdir -p "$alatermTop"
+	echo "# Fake status file in devmode." > "$alatermTop/status"
+fi
+checkedCompatibility="yes"
 echo "checkedCompatibility=yes" >> "$alatermTop/status"
 ##

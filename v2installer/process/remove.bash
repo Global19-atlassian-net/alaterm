@@ -1,7 +1,7 @@
 # Part of Alaterm, version 2.
 # Routine for removing Alaterm.
 
-echo "$(caller)" | grep -F alaterm-installer >/dev/null 2>&1
+echo "$(caller)" | grep -e alaterm-installer >/dev/null 2>&1
 if [ "$?" -ne 0 ] ; then
 	echo "This file is not stand-alone."
 	echo "It must be sourced from alaterm-installer."
@@ -9,7 +9,11 @@ if [ "$?" -ne 0 ] ; then
 fi
 
 
-# This routine removes Alaterm.
+# This routine removes Alaterm. But not in devmode:
+if [ ! -z "$devmode" ] ; then
+	echo "You cannot use remove while in devmode."
+	exit 1
+fi
 
 # If nothing found, nothing to do:
 if [ ! -d "$termuxTop/alaterm" ] ; then
@@ -24,6 +28,7 @@ remove_dir() {
 	a="$termuxTop/alaterm"
 	# 1. First remove easy stuff.
 	chmod 755 "$a" # In case it was read-only.
+	[ -f "$a/status.orig" ] && chmod 644 "$a/status.orig"
 	rm -r -f "${a:?}/*" # Removes most of the stuff.
 	# 2. Anything remaining needs chmod:
 	atls="$(ls -A $a)" 2>/dev/null
@@ -34,7 +39,7 @@ remove_dir() {
 	rm -r -f "$a"
 	# Remove the launch command and other stuff:
 	rm -f "$PREFIX/bin/alaterm"
-	rm -f "$PREFIX/bin/query-tvnc"
+	rm -f "$PREFIX/bin/query-tvnc" # Probably not there.
 	sed -i '/laterm/d' "$HOME/.bashrc" # In Termux ~/.bashrc.
 	sleep .2
 	printf "\e[1;92mDONE.\e[0m\n"

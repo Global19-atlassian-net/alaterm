@@ -1,7 +1,7 @@
 # Part of Alaterm, version 2.
 # Routine for downloading and checking the Arch Linux ARM archive and md5.
 
-echo "$(caller)" | grep -F alaterm-installer >/dev/null 2>&1
+echo "$(caller)" | grep -e alaterm-installer >/dev/null 2>&1
 if [ "$?" -ne 0 ] ; then
         echo "This file is not stand-alone."
         echo "It must be sourced from alaterm-installer."
@@ -98,9 +98,8 @@ check_archive() { # In $alatermTop.
 	printf "$INFO Now checking md5 sum... "
 	if md5sum -c "$yourArchive.md5" >/dev/null ; then
 		echo "Success."
-		echo "chosenMirror=$tMirror" >> status
-		export chosenMirror="$tMirror"
-		echo "gotArchive=yes" >> status
+		chosenMirror="$tmirror" && echo "chosenMirror=$tMirror" >> status
+		gotArchive="yes" && echo "gotArchive=yes" >> status
 	else
 		echo -e "$PROBLEM"
 		echo "Cannot continue when md5 fails."
@@ -114,13 +113,18 @@ check_archive() { # In $alatermTop.
 
 
 # Procedure for this part:
-trap scriptSignal HUP INT TERM QUIT # Message, then exit.
-trap scriptExit EXIT # Releases wakelock on any exit.
-start_termuxWakeLock # May allow faster install.
-echo -e "$INFO Will now access Internet."
-select_geoMirror # Or manual choice, if fail.
-download_archive
-sleep .2
-check_archive
-sleep .2
+if [ -z "$devmode" ] ; then
+	trap scriptSignal HUP INT TERM QUIT # Message, then exit.
+	trap scriptExit EXIT # Releases wakelock on any exit.
+	start_termuxWakeLock # May allow faster install.
+	echo -e "$INFO Will now access Internet."
+	select_geoMirror # Or manual choice, if fail.
+	download_archive
+	sleep .2
+	check_archive
+	sleep .2
+else
+	chosenMirror="devmode" && echo "chosenMirror=devmode" >> status
+	gotArchive="yes" && echo "gotArchive=yes" >> status
+fi
 ##

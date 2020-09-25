@@ -1,7 +1,7 @@
 # Part of Alaterm, version 2.
 # Routine for unpacking Arch into proot.
 
-echo "$(caller)" | grep -F alaterm-installer >/dev/null 2>&1
+echo "$(caller)" | grep -e alaterm-installer >/dev/null 2>&1
 if [ "$?" -ne 0 ] ; then
 	echo "This file is not stand-alone."
 	echo "It must be sourced from alaterm-installer."
@@ -42,7 +42,7 @@ copy_mirror() {
 	mv mirrorlist "$alatermTop/etc/pacman.d/"
 } # End copy_mirror.
 
-copy_resolvConf() { #####
+copy_resolvConf() {
 	cd "$alatermTop"
 	mkdir -p "$alatermTop/run/systemd/resolve"
 	rsr="run/systemd/resolve"
@@ -56,15 +56,17 @@ copy_resolvConf() { #####
 
 
 # Procedure for this part:
-unpack_archive
 install_template "readme-local.md"
-# The download mirror used for the archive is known-good. Save its location:
+if [ -z "$devmode" ] ; then
+	unpack_archive
+	sleep .2
+	rm -f "$alatermTop/$yourArchive" # No longer needed.
+	rm -f "$alatermTop/$yourArchive.md5" # No longer needed.
+	echo -e "$INFO Success unpacking archive."
+fi
+# The download mirror used for the archive is known-good:
 copy_mirror
 copy_resolvConf
-sleep .2
-rm -f "$alatermTop/$yourArchive" # No longer needed.
-rm -f "$alatermTop/$yourArchive.md5" # No longer needed.
-echo -e "$INFO Success unpacking archive."
-echo "unpackedArchive=yes" >> "$alatermTop/status"
-sleep .2
+unpackedArchive="yes" && echo "unpackedArchive=yes" >> "$alatermTop/status"
+sleep .1
 ##
