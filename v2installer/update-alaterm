@@ -21,20 +21,20 @@ if [[ "$here" =~ TAexp-min ]] ; then # Developer only.
 		export termuxHome="$HOME"
 		export userLocale="te_ST"
 		let scriptRevision=200 # Dummy, lower than any update.
-	else # Update running alaterm-dev.
-		source /status
 	fi
 else # Ordinary users, in launched Alaterm.
 	if  [ -r "/status" ] ; then
 		chmod 755 "$alatermTop"
 		chmod 644 "/status"
-		source /status
 	else
 		echo -e "\e[1;91mPROBLEM.\e[0m Did not find readable /status file."
 		echo "This script must be launched from within Alaterm."
 		exit 1
 	fi
 fi
+
+# Load variables and functions:
+source "$here/process/globals.bash" # Also sources /status, if there.
 
 # Test whether Alaterm is updateable:
 if [ "$scriptRevision" = "" ] || [ "$scriptRevision" -lt 40 ] ; then
@@ -71,13 +71,27 @@ if [ -f "$alatermTop/status" ] && [ ! -f "$alatermTop/status.orig" ] ; then
 	[ -z "$devmode" ] && chmod 400 "$alatermTop/status.orig"
 fi
 
+# Generic finish:
+update_done() {
+	echo "let scriptRevision=$v2latest" >> "$alatermTop/status"
+	printf " DONE.\n"
+	exit 0
+}
+
 
 ## Now for the update:
 ## ---------------------------------------------------------------------------
 
-printf "Updating Alaterm... "
-# Load variables and functions:
-source "$here/process/globals.bash" && printf "."
+printf "Updating Alaterm..."
+
+
+### Updates past 220 and including v2latest=222:
+# [ "$scriptRevision" -ge 222 ] && update_done
+# Updates for 222 go here.
+
+
+### Updates up to and including v2latest=220:
+[ "$scriptRevision" -ge 220 ] && update_done
 
 ## In case this was not done earlier:
 mkdir -p "$alatermTop/system"
@@ -172,9 +186,7 @@ sed -i '/installed vncviewer/d' "$thisfile" && printf "."
 cp -r "$here/help-alaterm" "$alatermTop/usr/local/"
 printf "."
 
-## Done:
+## 220 done:
 cp "$alatermTop/usr/local/scripts/$launchCommand" "$termuxPrefix/bin"
-echo "let scriptRevision=$v2latest" >> "$alatermTop/status"
-printf " DONE.\n"
-exit 0
+update_done
 ##
