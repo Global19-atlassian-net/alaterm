@@ -10,12 +10,17 @@ PATH="/usr/local/scripts:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 export PATH
 # Load profiles from /etc/profile.d.
 # Among other things, this may add perl to PATH:
+append_path() {
+	PATH="$PATH:$1" ; export PATH
+}
+alias appendpath='append_path'
 if [ -d /etc/profile.d/ ] ; then
 	for profile in /etc/profile.d/*.sh ; do
 		[ -r "$profile" ] && source "$profile"
 	done
 	unset profile
 fi
+unset -f appendpath ; unset -f append_path
 unset TERMCAP
 unset MANPATH
 # Alaterm version 2 does not use /etc/bash.bashrc.
