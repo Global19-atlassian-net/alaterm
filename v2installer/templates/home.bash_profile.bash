@@ -67,7 +67,7 @@ alias tlmgr='sudo tlmgr' # If user installs texlive.
 # Launch GUI:
 export DISPLAY=:1
 printf "\e[1;92mStarting Alaterm. \e[0m"
-vncserver # /usr/local/scripts/vncserver, not /usr/bin/vncserver.
+vncserver :1 # /usr/local/scripts/vncserver, not /usr/bin/vncserver.
 echo -e "\e[92mView LXDE Desktop in VNC Viewer app. Password: password"
 echo -e "To leave Alaterm and return to Termux: logout\e[0m\n";
 sleep .1
