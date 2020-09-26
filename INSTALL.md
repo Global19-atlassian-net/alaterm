@@ -52,13 +52,37 @@ Android may show a popup about battery optimization.
 If you allow it, then installation may run faster.
 
 Completion takes about 30-60 minutes with a good Internet connection.
-If your connection breaks during install,
+If your connection breaks during install (often happens),
 or if you must turn off your device, no problem.
 The script remembers where it was, and will resume from there
 when you again launch the installer.
 
+If you see error (lowercase red) or warning (lowercase yellow) messages
+during installation, ignore them. In most cases, they are self-fixing,
+or are messages from Arch that do not apply to Alaterm.
 
-### Connecting to VNC Viewer
+An uppercase yellow WARNING message is from the Alaterm installer.
+It is not an error. Installation will proceed.
+
+An uppercase red PROBLEM message is from the Alaterm installer.
+It is a fatal error, and will terminate the installer.
+But in most cases, the PROBLEM is due to broken Internet connection.
+Simply wait a moment, then re-launch the installer.
+It will continue from where the PROBLEM occurred.
+You may have to do this several times, depending on your connection.
+
+Broken Internet connection is common.
+It may be due to busy server at the Arch Linux ARM mirror site.
+It may be due to excessive traffic on shared WiFi.
+It may be due to firewall limitations. It may be due to bad luck.
+Even the Alaterm developer usually has to re-start the installer,
+when a new version is tested. Live with it.
+
+As long as the installer keeps running, it is working.
+When it finishes without PROBLEM, you will see a green DONE message.
+
+
+### Using Alaterm: Connecting to VNC Viewer
 
 After a successful installation, you will see this message:
 
