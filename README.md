@@ -65,3 +65,9 @@ be sure to raise an issue.
 
 Installation re-verified on September 26, 2020,
 using installer version 2.2.0.
+
+
+### NOTICE
+
+Android, Termux, Linux, Arch Linux, and Arch Linux ARM are trademarks
+of their respective holders. Alaterm is an independent project.
