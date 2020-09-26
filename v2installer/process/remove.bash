@@ -9,9 +9,9 @@ if [ "$?" -ne 0 ] ; then
 fi
 
 
-# This routine removes Alaterm. But not in devmode:
-if [ ! -z "$devmode" ] ; then
-	echo "You cannot use remove while in devmode."
+# This routine removes Alaterm. But not in devmode test:
+if [ "$devmode" = "test" ] ; then
+	echo "You cannot use remove while in devmode test."
 	exit 1
 fi
 
@@ -28,7 +28,7 @@ remove_dir() {
 	a="$termuxTop/alaterm"
 	# 1. First remove easy stuff.
 	chmod 755 "$a" # In case it was read-only.
-	[ -f "$a/status.orig" ] && chmod 644 "$a/status.orig"
+	[ -f "$a/alastat.orig" ] && chmod 644 "$a/alastat.orig"
 	rm -r -f "${a:?}/*" # Removes most of the stuff.
 	# 2. Anything remaining needs chmod:
 	atls="$(ls -A $a)" 2>/dev/null

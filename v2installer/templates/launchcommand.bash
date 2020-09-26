@@ -18,12 +18,12 @@ export alatermTop="PARSE$alatermTop"
 if [ -r "$alatermTop/status" ] ; then
 	source "$alatermTop/status"
 else
-	if [ -r "$alatermTop/status.orig" ] ; then
-		cp "$alatermTop/status.orig" "$alatermTop/status"
+	if [ -f "$alatermTop/alastat.orig" ] ; then
+		cp "$alatermTop/alastat.orig" "$alatermTop/status"
 		chmod 644 "$alatermTop/status"
 		source "$alatermTop/status"
 		echo -e "$WARNING Did not find Alaterm status file."
-		echo "Found status.orig. Copied it. Using it."
+		echo "Found alastat.orig. Copied it. Using it."
 	else
 		echo -e "\e[1;91mPROBLEM.\e[0m Missing Alaterm status file."
 		echo "Cannot launch Alaterm without it."

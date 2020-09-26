@@ -244,7 +244,7 @@ verify_storageEnabled() { # So Alaterm communicates with Android file manager.
 
 
 # Sequence of actions:
-if [ -z "$devmode" ] ; then
+if [ "$devmode" != "test" ] ; then
 	check_directory # Intended location OK?
 	check_priorInstall # Anything already there?
 	check_ABI # Your flavor of Android system. Not same as version number.
@@ -259,7 +259,7 @@ if [ -z "$devmode" ] ; then
 	echo -e "$INFO Passed preliminary inspection."
 else
 	mkdir -p "$alatermTop"
-	echo "# Fake status file in devmode." > "$alatermTop/status"
+	echo "# Fake status file for devtest." > "$alatermTop/status"
 fi
 checkedCompatibility="yes"
 echo "checkedCompatibility=yes" >> "$alatermTop/status"

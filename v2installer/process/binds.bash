@@ -82,6 +82,6 @@ count_processors
 [ ! -r /proc/stat ] && create_dummyPS "$processors"
 [ ! -r /proc/version ] && create_dummyPV
 sleep .2
-[ -z "$devmode" ] && echo -e "$INFO Created dummy binds."
+[ "$devmode" != "test" ] && echo -e "$INFO Created dummy binds."
 createdBinds="yes" && echo "createdBinds=yes" >> "$alatermTop/status"
 ##

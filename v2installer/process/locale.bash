@@ -54,10 +54,10 @@ find_locale() {
 
 
 # Perform above functions:
-if [ -z "$devmode" ] ; then
+if [ "$devmode" != "test" ] ; then
 	find_locale
 else
-	userLocale="te_ST"
+	userLocale="te_ST" # Fake.
 fi
 install_template "locale.conf"
 sleep .2
@@ -65,5 +65,5 @@ LANG="$userLocale.UTF-8" # Always UTF-8.
 echo "export userLocale=$userLocale" >> "$alatermTop/status"
 echo "export LANG=$userLocale.UTF-8" >> "$alatermTop/status"
 localeSet="yes" && echo "localeSet=yes" >> "$alatermTop/status"
-[ -z "$devmode" ] && echo -e "$INFO Locale $userLocale and LANG $LANG."
+[ "$devmode" != "test" ] && echo -e "$INFO Locale $userLocale and LANG $LANG."
 ##

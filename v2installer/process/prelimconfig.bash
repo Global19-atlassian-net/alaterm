@@ -13,7 +13,7 @@ cd "$alatermTop/etc"
 touch pacman.conf
 sed -i '/^#Color/s/^#//' pacman.conf 2>/dev/null
 chmod 644 pacman.conf
-
+install_template "readme-local.md"
 echo "" > "$alatermTop/etc/bash.bash_logout" # Written later.
 install_template "bash.bashrc.bash" # Does nothing.
 # The temporary /etc/profile is a lengthy set of instructions
@@ -22,10 +22,10 @@ install_template "bash.bashrc.bash" # Does nothing.
 install_template "prelim-profile.bash" # As temporary /etc/profile.
 # Create a temporary command for launching Arch as root:
 install_template "prelim-launch.bash" "755"
-# Now execute that command, which activates /root.bashrc, except in devmode:
-if [ -z "$devmode" ] ; then
+# Now execute that command, which activates /root.bashrc, except devmode test:
+if [ "$devmode" != "test" ] ; then
 	bash "$alatermTop/prelim-launch.bash"
-else
+else # Fake it in devmode test:
 	gotSudo="yes" && echo "gotSudo=yes" >> "$alatermTop/status"
 fi
 temprl="$(grep gotSudo $alatermTop/status 2>/dev/null)"
@@ -34,8 +34,8 @@ if [ "$temprl" = "" ] ; then # Failed prelim-launch.bash.
 	rm -f "$alatermTop/prelim-launch.bash"
 	exit 1
 fi
-[ -z "$devmode" ] && rm -f "$alatermTop/prelim-launch.bash"
-[ -z "$devmode" ] && echo -e "$INFO Preliminary configuration done."
+[ "$devmode" = "test" ] && rm -f "$alatermTop/prelim-launch.bash"
+[ "$devmode" = "test" ] && echo -e "$INFO Preliminary configuration done."
 completedPrelim="yes" && echo "completedPrelim=yes" >> "$alatermTop/status"
 sleep .2
 ##

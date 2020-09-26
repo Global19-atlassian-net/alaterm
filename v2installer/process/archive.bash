@@ -113,7 +113,7 @@ check_archive() { # In $alatermTop.
 
 
 # Procedure for this part:
-if [ -z "$devmode" ] ; then
+if [ "$devmode" != "test" ] ; then
 	trap scriptSignal HUP INT TERM QUIT # Message, then exit.
 	trap scriptExit EXIT # Releases wakelock on any exit.
 	start_termuxWakeLock # May allow faster install.
@@ -124,7 +124,7 @@ if [ -z "$devmode" ] ; then
 	check_archive
 	sleep .2
 else
-	chosenMirror="devmode" && echo "chosenMirror=devmode" >> status
+	chosenMirror="devtest" && echo "chosenMirror=devtest" >> status
 	gotArchive="yes" && echo "gotArchive=yes" >> status
 fi
 ##

@@ -54,6 +54,19 @@ let thisRevision=220 # 220 in version 2.2.0.
 #   To see the GUI desktop, Termux and VNC Viewer must both be running.
 ##
 
+## DEVELOPER NOTES: Ordinary users should disregard this information.
+## ---------------------------------------------------------------------------
+# 1. To enter devmode, place v2installer in a folder named TAexp-min.
+#    You can also use TAexp-min2, TAexp-minYada, etc.
+# 2. If TAexp-min is in a folder named install, then devmode=full.
+#    Otherwise, devmode=test.
+# 3. In devmode, Alaterm is installed to alaterm-dev instead of alaterm.
+#    The devmode launch command is alaterm-dev instead of alaterm.
+#    Thus, devmode does not alter or interfere with ordinary Alaterm.
+# 4. When devmode=full, alaterm-dev is a working installation.
+#    But devmode=test only installs templates, so it is non-working.
+
+
 ## READ SCRIPT ARGUMENT:
 ## ---------------------------------------------------------------------------
 # Decide what to do now:
@@ -120,16 +133,16 @@ missing_something() {
 ## GLOBAL VARIABLES AND FUNCTIONS:
 ## ---------------------------------------------------------------------------
 ## Functions and variables used by all following scripts.
+[ ! -f "$here/process/globals.bash" ] && missing_something
 source "$here/process/globals.bash"
-[ "$?" -ne 0 ] && missing_something
 ##
 
 ## REMOVE:
 ## ---------------------------------------------------------------------------
 ## May fail if you edited installer with custom location.
 if [ "$actionMode" = "remove" ] ; then
+	[ ! -f "$here/process/remove.bash" ] && missing_something
 	source "$here/process/remove.bash"
-	[ "$?" -ne 0 ] && missing_something
 fi
 ##
 
@@ -138,11 +151,8 @@ fi
 ## INSTALLER BEGINS HERE
 ##############################################################################
 
-if [ "$actionMode" != "install" ] ; then
-	echo "PROBLEM: You should not see this message."
-	exit 1
-fi
-
+## Ensure that kit is OK.
+[ "$actionMode" != "install" ] && echo "You should not see this!" && exit 1
 [ ! -f "$here/process/compatibility.bash" ] && missing_something
 [ ! -f "$here/process/archive.bash" ] && missing_something
 [ ! -f "$here/process/unpack.bash" ] && missing_something
@@ -152,96 +162,50 @@ fi
 [ ! -f "$here/process/getlxde.bash" ] && missing_something
 [ ! -f "$here/process/finish.bash" ] && missing_something
 
-
-## DEVICE COMPATIBILITY CHECKS:
-## ---------------------------------------------------------------------------
-## Measures ABI, free space, etc.
+## Measure device ABI, free space, and other compatibility checks.
 if [ "$checkedCompatibility" != "yes" ] ; then
 	source "$here/process/compatibility.bash"
 fi
-##
 
-## DOWNLOAD ARCHIVE:
-## ---------------------------------------------------------------------------
-## Gets Arch Linux ARM and its md5.
+## Download Arch Linux ARM and its md5.
 if [ "$gotArchive" != "yes" ] ; then
 	source "$here/process/archive.bash"
 fi
-##
 
-## UNPACK ARCHIVE IN PROOT:
-## ---------------------------------------------------------------------------
-## Fools Arch into thinking that it is the operating system.
+## Unpack downloaded archive into proot jail.
 if [ "$unpackedArchive" != "yes" ] ; then
 	source "$here/process/unpack.bash"
 fi
-##
 
-## SET LOCALE:
-## ---------------------------------------------------------------------------
-## Reads locale from device properties. Will always be UTF-8.
+## Read locale from device properties. Will always be UTF-8.
 if [ "$localeSet" != "yes" ] ; then
 	source "$here/process/locale.bash"
 fi
-##
 
-## CREATE FAKE BIND FILES:
-## ---------------------------------------------------------------------------
-## Provides fake info for /proc/stat and /proc/version, if needed.
+## Provide fake info for unreadable /proc/stat and /proc/version.
 if [ "$createdBinds" != "yes" ] ; then
 	source "$here/process/binds.bash"
 fi
-##
 
-## PRELIMINARY CONFIGURATION:
-## ---------------------------------------------------------------------------
-## Creates dotfiles, launches Arch, deletes, adds, creates user, etc.
+## Launch Arch, update it, create new sudo user, install some templates.
 if [ "$completedPrelim" != "yes" ] ; then
 	source "$here/process/prelimconfig.bash"
 fi
-##
 
-## INSTALL AND CONFIGURE LXDE DESKTOP:
-## ---------------------------------------------------------------------------
-## Re-launches Arch as new user, installs the LXDE Desktop.
+## Re-launch Arch as new user, install the LXDE Desktop and some templates.
 if [ "$configuredDesktop" != "yes" ] ; then
 	source "$here/process/getlxde.bash"
 fi
-##
 
-## INSTALL HELP, LOCAL SCRIPTS, AND LAUNCH COMMAND:
-## ---------------------------------------------------------------------------
-## Creates and installs the command for launching Alaterm from Termux.
+## Install the launch command, install help, install remaining templates.
 if [ "$completedInstall" != "yes" ] ; then
 	source "$here/process/finish.bash"
 fi
-##
 
-## DONE:
-## ---------------------------------------------------------------------------
-## Congratulations!
-echo -e "$DONE"
-[ ! -z "$devmode" ] && exit 0
-echo "Delete [d] Arch archive and its md5,"
-echo "or keep [k] them in Termux home?"
-while true ; do
-	printf "$Enter your choice [d|k] : " ; read r
-	case "$r" in
-		d*|D* ) printf "Deleting archive... "
-			rm -f "$alatermTop/$yourArchive"
-			rm -f "$alatermTop/$yourArchive.md5"
-			break ;;
-		k*|K* )	printf "Moving archive to Termux home... "
-			mv "$alatermTop/$yourArchive" "~"
-			mv "$alatermTop/$yourArchive.md5" "~"
-			break ;;
-		* )	echo "No default." ;;
-	esac
-done
+## Done. Exit here, so the Copyright and Licsne is not processed as script.
 echo -e "$DONE"
 echo -e "\e[1;33mTo launch Alaterm, command:  alaterm\e[0m"
-#
-exit 0 # So the following Copyright and License is not processed as script.
+exit 0
 ##
 
 

@@ -56,15 +56,14 @@ copy_resolvConf() {
 
 
 # Procedure for this part:
-install_template "readme-local.md"
-if [ -z "$devmode" ] ; then
+if [ "$devmode" != "test" ] ; then
 	unpack_archive
 	sleep .2
 	rm -f "$alatermTop/$yourArchive" # No longer needed.
 	rm -f "$alatermTop/$yourArchive.md5" # No longer needed.
 	echo -e "$INFO Success unpacking archive."
 fi
-# The download mirror used for the archive is known-good:
+# Record the download mirror. In devmode test, a fake mirror was named.
 copy_mirror
 copy_resolvConf
 unpackedArchive="yes" && echo "unpackedArchive=yes" >> "$alatermTop/status"

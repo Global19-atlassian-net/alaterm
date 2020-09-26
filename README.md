@@ -63,4 +63,5 @@ Look at the file INSTALL.md at this site.
 If installation fails for you, and you have a GitHub account,
 be sure to raise an issue.
 
-Installation re-verified on August 28, 2020. Using installer version 2.0.0.
+Installation re-verified on September 26, 2020,
+using installer version 2.2.0.

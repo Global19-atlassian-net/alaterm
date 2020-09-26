@@ -34,11 +34,14 @@ declare termuxHome="$HOME" # Where Termux is, at start.
 declare alatermTop="$termuxTop/alaterm" # Highest rwx directory in Termux.
 declare launchCommand="alaterm" # As used by Termux.
 declare devmode="" # Empty for ordinary users.
-if [[ "$here" =~ TAexp-min ]] ; then # Developer use only.
-	devmode="yes"
+if [[ "$here" =~ /TAexp-min ]] ; then # Developer use only.
 	alatermTop="$alatermTop-dev"
 	launchCommand="$launchCommand-dev"
-	echo "In devmode... "
+	if [[ "$here" =~ install/TAexp-min ]] ; then
+		devmode="full" # Complete, working installation to alaterm-dev.
+	else
+		devmode="test" # Only installs templates, etc. Non-functional.
+	fi
 fi
 # ABI is Android-speak for its operating system. Not same as version number.
 # As of mid-2020 these two are known, plus Chromebook version of armeabi-v7a:

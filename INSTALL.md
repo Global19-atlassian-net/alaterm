@@ -84,8 +84,8 @@ be remembered. There is no advantage to a more secure password.
 Do not request warning for insecure connection.
 
 After that, a new black square will appear on the VNC Viewer screen.
-Click it to open the LXDE Desktop. It will have a beautiful blue background
-with the LXDE logo.
+Click it to open the LXDE Desktop.
+It will have a beautiful blue background with the LXDE logo.
 But if that is not what you see, then something went wrong.
 
 
@@ -136,7 +136,7 @@ where you touch. Wherever it is, it will follow your finger sweep, even if
 your finger is not over the cursor. Then, when the cursor is positioned
 to where you need it, tap anywhere on the screen.
 
-Remember that the on-screen keyboard comes from the Android overlay.
+Remember that the on-screen keyboard comes from the Android-VNC overlay.
 If necessary, sweep from top or bottom of screen to see the overlay,
 then tap on the keyboard icon.
 
@@ -161,9 +161,9 @@ To exit Alaterm: `logout` returns you to Termux.
 
 Then you may continue in Termux, or `exit` to leave.
 
-The command-line terminal and VNC Viewer are independent Android apps.
-Cosing the terminal does not automatically close the viewer.
-Closing the viewer does not automatically close Alaterm.
+Termux command-line terminal, and VNC Viewer, are independent Android apps.
+Closing the terminal does not automatically close the viewer.
+Closing the viewer does not automatically close Termux or Alaterm.
 
 
 
@@ -185,6 +185,6 @@ are NOT supported. This is not a bug. Live with it.
 
 Termux home directory is Android `/data/data/com.termux/files/home`<br>
 Termux software directory is `/data/data/com.termux/files/usr`<br>
-Alaterm is in `/data/data/com.termux/alaterm`
-
+Alaterm is in `/data/data/com.termux/alaterm` and its subdirectories.<br>
+Alaterm home directory is `/data/data/com.termux/alaterm/home`.
 

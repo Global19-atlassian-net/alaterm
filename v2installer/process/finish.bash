@@ -35,7 +35,7 @@ install_template "bash.bash_logout.bash"
 install_template "launchcommand.bash" "755"
 cp "$alatermTop/usr/local/scripts/$launchCommand" "$PREFIX/bin/"
 # Let Termux know that Alaterm is installed:
-[ -z "$devmode" ] && modify_termuxBashrc
+[ "$devmode" != "test" ] && modify_termuxBashrc
 
 # Extras:
 install_template "TeXworks.conf"
@@ -59,6 +59,6 @@ echo "completedInstall=yes" >> "$alatermTop/status"
 echo "## Installation complete." >> "$alatermTop/status"
 echo "## Anything after this is an update." >> "$alatermTop/status"
 # Make backup copy of original status file:
-cp "$alatermTop/status" "$alatermTop/status.orig"
-[ -z "$devmode" ] && chmod 400 "$alatermTop/status.orig"
+cp "$alatermTop/status" "$alatermTop/alastat.orig"
+[ "$devmode" != "test" ] && chmod 444 "$alatermTop/alastat.orig"
 ##

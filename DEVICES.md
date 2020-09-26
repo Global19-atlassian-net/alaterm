@@ -12,7 +12,7 @@
 6. **Termux** app, and **VNC Viewer** app.
 Available at Google Play or F-Droid.
 
-7. At least 2GB RAM.
+7. At least 2GB RAM. The more, the better.
 
 
 ### Additional info
@@ -26,3 +26,6 @@ Alaterm works with touchscreen on phones or tablets, BUT:
 The GUI is hard to see and use, unless you have a larger screen (tablet)
 and use it in landscape mode (like a desktop computer, not a phone).
 Bluetooth keyboard and mouse are supported. Also USB mouse and keyboard.
+
+Alaterm does not provide audio. This is an Android limitation.
+But you can play music from some other Android app, while using Alaterm.
