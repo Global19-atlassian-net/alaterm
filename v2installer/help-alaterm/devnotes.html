@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" type="text/css" href="help-alaterm.css">
+
+<!-- Within Alaterm, use NetSurf browser. -->
+<!-- To read help outside of Alaterm, download the repository ZIP. -->
+<!-- Unzip it, then view the html in any browser. -->
+<!-- helpversion=6 -->
+
+<title>Developer Notes</title>
+
+</head>
+<body id="h">
+<div id="master">
+
+<p class="index">&lt;&lt; <a href="index.html">INDEX</a></p>
+
+
+<h3 id="h3">10. Developer Notes</h3>
+
+<p class="menu">10.1. <a href="#h10.1">Purpose of Alaterm</a></p>
+<p class="menu">10.2. <a href="#h10.2"> </a></p>
+<p class="menu">10.3. <a href="#h10.3"> </a></p>
+<p class="menu">10.4. <a href="#h10.4"> </a></p>
+
+<p class="break">This page is for developers only. If you do not know
+whether or not you are a developer, then you are not.</p>
+
+<p class="top">^<a href="#h">TOP</a>^</p>
+
+
+<h4 id="h10.1">10.1. Structure of Alaterm</h4>
+
+<p>Alaterm is a set of scripts and configuration files.
+It downloads and installs Arch Linux ARM software,
+then downloads and installs the LXDE Desktop.
+Finally, it configures everything, to provide a just-works experience.<p>
+
+<p>Originally, Alaterm version 1.x scripted all of the configuration
+dynamically, using BASH here-documents, echo, and sed. Although that
+worked, it was very difficult to maintain.</p>
+
+<p>Version 2.x uses a simpler approach. The download and install process
+is scripted, as before. But configuration is done by copying templates.
+The templates are parsed for a few variables, but are mostly copied verbatim.
+This makes it easy to maintain, because once Alaterm is installed,
+updates normally involve no more than re-copying newer templates.</p>
+
+<p class="top">^<a href="#h">TOP</a>^</p>
+
+
+<h4 id="h10.2">10.2. When Alaterm launches</h4>
+
+<p class="break">Alaterm sits entirely within Termux. Its files
+do not mingle with Termux home, or with ordinary Termux executables,
+except for the launch command.</p>
+
+<p>Alaterm will not launch if it is already running, or if its
+status file is missing. If Termux is running its own VNC server,
+then that server will be killed before proceeding with Alaterm.</p>
+
+<p>Alaterm runs in a "proot" jail. This fools the software into
+thinking that it is installed in a regular Linux system.
+It works for user-space software that does not need access
+to system services or daemons. If a particular program does need
+such access, then it will not work (or will only partially work)
+in Alaterm. That is why there is no audio. It is also why the only
+browser known to work is NetSurf.</p>
+
+<p>During launch, Alaterm reads /etc/profile, /home/.bash_profile,
+and /home/.bashrc. It does not read /etc/bash.bash_profile or
+anything in /root. Among these files, only /home/.bashrc is safe from
+being over-written by an Alaterm update.</p>
+
+<p>The PATH is custom. Directories /usr/local/scripts and /usr/local/bin
+appear early in PATH. This allows the developer to intercept calls to
+some Linux executables that will not work properly in Alaterm,
+without the need for alias.</p>
+
+<p>For example, the <code>ps</code> command worked in Android 9, but not 10.
+A request for <code>ps</code> goes to <code>/usr/local/scripts/ps</code>,
+which is a custom substitute. On the other hand, <code>top</code> does not
+work, and there is no substitute. So a request for <code>top</code> is
+intercepted by <code>/usr/local/scripts/top</code>, which merely provides
+a polite error message.</p>
+
+<p class="top">^<a href="#h">TOP</a>^</p>
+
+
+<h4 id="h10.2">10.3. The user</h4>
+
+<p class="break">During installation, Alaterm creates a single user,
+named <code>user</code>. Its home directory is <code>/home</code>
+rather than <code>/home/user</code>. The login password, which is
+<code>password</code>, is automatically applied. There is no point to
+changing username or password, because anyone with access to Termux
+can read or change anything in Alaterm, without needing a password.</p>
+
+<p>The user has administrative (<code>sudo</code>) privilege.
+It is rarely needed. Common commands requiring <code>sudo</code>
+apply it automatically, without requesting password. Most files and
+directories can be changed without privilege elevation, so be careful,
+because you will not be prevented from doing things that can
+wreck Alaterm. Your privilege does not extend to anything outside Termux.<p>
+
+<p class="top">^<a href="#h">TOP</a>^</p>
+
+</div><!-- end master -->
+</body>
+</html>
+

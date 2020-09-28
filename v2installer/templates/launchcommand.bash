@@ -45,7 +45,7 @@ fi
 # It is possible to install vncservers both in Termux and in Alaterm.
 # They conflict if both are in use at the same time.
 # Check for active Termux vncserver, kill it, and removes its temp files:
-mytvnc=$(pidof Xvnc) # If Xvnc is running, pidof returns its process ID.
+mytvnc="$(pidof Xvnc)" # If Xvnc is running, pidof returns its process ID.
 if [ "$?" -eq 0 ] ; then
 	kill $mytvnc # No quotes.
 	rm -r -f /tmp/.X1*
@@ -65,8 +65,8 @@ prsUser+=" -b /proc -b /system -b /dev -b /data "
 [ ! -r /dev/shm ] && prsUser+=" -b $alatermTop/tmp:/dev/shm"
 [ -d /sys ] && prsUser+=" -b /sys"
 [ -d /vendor ] && prsUser+=" -b /vendor"
-[ -d /odm ] && prsuser+=" -b /odm"
-[ -d /product ] && prsuser+=" -b /product"
+[ -d /odm ] && prsUser+=" -b /odm"
+[ -d /product ] && prsUser+=" -b /product"
 # Many parts of Android /proc are inacessible in Alaterm.
 # Bind fake information instead, which fools many programs:
 if [ ! -r /proc/stat ] ; then

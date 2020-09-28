@@ -1,6 +1,12 @@
 ### NEWS for Alaterm
 
-Be sure to read the UPDATE.md file.
+Alert: On September 27, 2020, the developer erroneously uploaded
+a developer-only update file. It was removed within a few hours.
+If you grabbed that update and applied it, your Alaterm may fail.
+This is fixed in update 223. No harm done.
+
+Be sure to read the revised UPDATE.md file.
+Note that updates are applied when Alaterm is NOT running.
 
 On September 10, 2020, a change in Tigervnc software caused a bug in Alaterm.
 New Alaterm installations would fail to launch the LXDE Desktop.
@@ -16,4 +22,3 @@ The solution is likely to be permanent.
 Your friendly Alaterm developer does not know much about programming,
 but he is very good with a sledge hammer. Maybe voodoo, too.
 
-If necessary, it will be re-whacked. Latest re-whack: September 26, 2020.

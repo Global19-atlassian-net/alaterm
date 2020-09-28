@@ -11,7 +11,7 @@ just like on a desktop computer?
 Would you like to do this without "rooting" or jailbreaking your device?
 If so, then you are in the right place.
 
-I have a 10.1" Samsung Galaxy Tab A 2019 WiFi tablet,
+I have a 10.1in Samsung Galaxy Tab A 2019 WiFi tablet,
 no phone, not rooted, Android 9 (now 10).
 Using the free Termux and VNC Viewer apps (from Google Play Store),
 I have been able to install Arch Linux ARM with an excellent LXDE desktop.

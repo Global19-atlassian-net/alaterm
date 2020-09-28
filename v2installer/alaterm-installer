@@ -2,8 +2,8 @@
 # Alaterm: Arch Linux ARM in Termux.
 # Copyright and MIT License at bottom of this file.
 declare repository=https://github.com/cargocultprog/alaterm
-declare versionID=2.2.2 # Updated October 1, 2020.
-let thisRevision=222 # 222 in version 2.2.2.
+declare versionID=2.2.3 # Updated September 28, 2020.
+let thisRevision=223 # 223 in version 2.2.3.
 ##
 
 ## DEVICE REQUIREMENTS:
@@ -71,10 +71,10 @@ let thisRevision=222 # 222 in version 2.2.2.
 ## ---------------------------------------------------------------------------
 # Decide what to do now:
 show_usage() { # Unless exactly one valid argument provided.
-	echo "$(basename $0), version $versionID."
+	echo "alaterm-installer, version $versionID."
 	echo "Installs or removes Alaterm within Termux."
 	echo "For selected Android devices with ARM processors."
-	echo "Usage: bash $(basename $0) <install|remove|help|version>"
+	echo "Usage: bash alaterm-installer <install|remove|help|version>"
 	echo "Exactly one argument required. May abbreviate as: i r h v"
 	echo "Any choice, except version, gets interactive dialog."
 	echo -e "To update existing Alaterm, use: bash update-alaterm\n"
@@ -102,7 +102,7 @@ show_scriptHelp() {
 } # End show_scriptHelp.
 #
 show_version() {
-	echo "$(basename $0), version $versionID" && exit 0
+	echo "alaterm-installer, version $versionID" && exit 0
 } # End show_version.
 #
 [ "$#" -gt 1 ] && show_usage

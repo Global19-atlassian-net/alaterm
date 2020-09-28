@@ -112,7 +112,6 @@ create_statusFile() { # In $alatermTop. Stores progress and global variables.
 	export ENTER="\e[1mEnter\e[0m" # Bold, user input.
 	# Recorded when device compatibility approved:
 	export installerVersion="$versionID"
-	scriptLocation="$here"
 	export termuxTop="$termuxTop"
 	export termuxPrefix="$PREFIX"
 	export TUSR="$PREFIX" # Version compatibility.
