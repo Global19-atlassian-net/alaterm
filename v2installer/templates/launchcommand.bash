@@ -6,9 +6,11 @@
 # This is the Alaterm launch command.
 # It cannot be run by an already-launched Alaterm.
 
-if [ -d /usr ] ; then # Alaterm has /usr, Termux has $PREFIX/usr.
-	echo "This command cannot be run by already-launched Alaterm."
-	echo "You may only launch it from Termux, outside of Alaterm."
+mypidof="$(pidof proot 2>/dev/null)"
+if [ "$mypidof" != "" ] ; then
+	echo "You cannot launch Alaterm while"
+	echo "Alaterm is already running,"
+	echo "or if another program uses proot."
 	exit 1
 fi
 

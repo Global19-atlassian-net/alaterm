@@ -3,7 +3,7 @@
 # Ordinary usage, from within launched Alaterm:
 # Enter this folder, then command:  bash update-alaterm
 
-let v2latest=220
+let v2latest=222
 
 # Location of this script file, even if called from somewhere else:
 export here="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
@@ -34,6 +34,8 @@ else
 fi
 
 # Test for /status:
+source "$here/process/globals.bash"
+[ -r /status ] && alatermTop=""
 if [ -f "$alatermTop/status" ] ; then
 	chmod 644 "$alatermTop/status"
 	if [ ! -f "$alatermTop/alastat.orig" ] ; then
@@ -98,7 +100,8 @@ printf "."
 
 ### Begin group of updates past 220 and including v2latest=222:
 [ "$scriptRevision" -ge 222 ] && update_done
-# Updates for 222 go here. None yet.
+install_template "launchcommand.bash" "755" && printf "."
+cp "$alatermTop/usr/local/scripts/$launchCommand" "$termuxPrefix/bin"
 ### End group of updates past 220 and including v2latest=222.
 
 
@@ -134,7 +137,6 @@ install_template "default-resolution.bash" "755" && printf "."
 install_template "home.bash_profile.bash" && printf "."
 install_template "home.vnc-xstartup.bash" "755" && printf "."
 install_template "home.xinitrc.bash" && printf "."
-install_template "launchcommand.bash" "755" && printf "."
 install_template "menu.xml" && printf "."
 install_template "mimeapps-list.bash" "755" && printf "."
 install_template "mimeapps-list.hook" && printf "."
@@ -175,8 +177,6 @@ sed -i '/alias pacman/d' "$thisfile"
 sed -i '/alias fc-cache/d' "$thisfile"
 sed -i '/alias vncviewer/d' "$thisfile"
 sed -i '/installed vncviewer/d' "$thisfile" && printf "."
-## Reinstall launch command:
-cp "$alatermTop/usr/local/scripts/$launchCommand" "$termuxPrefix/bin"
 # These templates do not need edit or reinstall:
 # root.bashrc.bash
 # root.bash_profile.bash

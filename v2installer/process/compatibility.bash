@@ -14,6 +14,10 @@ check_directory() {
 		echo -e "$PROBLEM Cannot install Alaterm at Android root."
 		exit 1
 	fi
+	if [ -f "$alatermTop/status" ] ; then
+		echo "$alatermTop/status" | grep "Fake status file" >/dev/null 2>&1
+		[ "$?" -eq 0 ] && rm -r -f "$alatermTop"
+	fi
 	mkdir -p "$alatermTop" 2>/dev/null # It may already exist.
 	if [ "$?" -ne 0 ] ; then # Unlikely to fail.
 		echo -e "$PROBLEM Cannot create installation directory."
